@@ -214,6 +214,8 @@
     <Content Include="Recursos\Logoo.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="ScriptsSQL\DDL.sql" />
+    <Content Include="ScriptsSQL\DML.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
