@@ -34,6 +34,13 @@ namespace SistemaRestaurante.UI.Formularios
             dgvUsuarios.DataSource = null;
             dgvUsuarios.DataSource = usuarios;
             dgvUsuarios.ClearSelection();
+
+            // Cambiar los nombres de los encabezados de columna
+            dgvUsuarios.Columns["id_usuario"].HeaderText = "ID";
+            dgvUsuarios.Columns["nombre"].HeaderText = "Nombre completo";
+            dgvUsuarios.Columns["username"].HeaderText = "Usuario";
+            dgvUsuarios.Columns["password"].HeaderText = "Contraseña";
+            dgvUsuarios.Columns["rol"].HeaderText = "Rol de usuario";
         }
         private void tamanioDgv()
         {
@@ -76,6 +83,7 @@ namespace SistemaRestaurante.UI.Formularios
             {
                 MessageBox.Show(ex.Message);
             }
+            tamanioDgv();
         }
 
         private void btnEditar_Click(object sender, EventArgs e)
@@ -104,6 +112,7 @@ namespace SistemaRestaurante.UI.Formularios
             {
                 MessageBox.Show(ex.Message);
             }
+            tamanioDgv();
         }
 
         private void btnEliminar_Click(object sender, EventArgs e)
@@ -124,6 +133,7 @@ namespace SistemaRestaurante.UI.Formularios
             {
                 MessageBox.Show(ex.Message);
             }
+            tamanioDgv();
         }
 
         private void dataGridView1_SelectionChanged(object sender, EventArgs e)
@@ -147,6 +157,7 @@ namespace SistemaRestaurante.UI.Formularios
             txtContrasenia.Text = "";
             cbxRol.SelectedIndex = -1;
             cbxRol.Text = "Seleccionar";
+            tamanioDgv();
         }
 
         private void label1_Click(object sender, EventArgs e)

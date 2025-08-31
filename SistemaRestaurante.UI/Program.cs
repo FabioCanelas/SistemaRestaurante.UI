@@ -17,7 +17,7 @@ namespace SistemaRestaurante.UI
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new DashboardAdmiUI());
+            Application.Run(new LoginUI());
         }
     }
 }

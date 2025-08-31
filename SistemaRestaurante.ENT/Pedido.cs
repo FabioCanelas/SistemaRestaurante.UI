@@ -9,10 +9,10 @@ namespace SistemaRestaurante.ENT
     public enum Estado
     {
         PENDIENTE,
-        EN_PREPARACION,
         ENTREGADO,
         CANCELADO
     }
+
     public class Pedido
     {
         public int id_pedido { get; set; }
@@ -20,6 +20,8 @@ namespace SistemaRestaurante.ENT
         public Estado estado { get; set; }
         public decimal total { get; set; }
         public int id_usuario { get; set; }
-        public string nombre_cliente { get; set; } // Nuevo campo para el nombre del cliente
+
+        // Número de orden (corresponde a la columna num_orden en la BD)
+        public string num_orden { get; set; }
     }
 }

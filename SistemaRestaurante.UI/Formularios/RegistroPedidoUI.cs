@@ -1,4 +1,5 @@
-﻿using SistemaRestaurante.DAL;
+﻿using SistemaRestaurante.BLL;
+using SistemaRestaurante.DAL;
 using SistemaRestaurante.ENT;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,8 @@ namespace SistemaRestaurante.UI.Formularios
 {
     public partial class RegistroPedidoUI : Form
     {
+        private RegistroPedidoBLL _registroBLL = new RegistroPedidoBLL();
+
         public RegistroPedidoUI()
         {
             InitializeComponent();
@@ -78,7 +81,7 @@ namespace SistemaRestaurante.UI.Formularios
             // 2. Calcular subtotal
             decimal subtotal = cantidad * platoSeleccionado.precio;
 
-            // 3. Agregar al DataGridView
+            // 3. Agregar al DataGridView 
             dgvDetallePedido.Rows.Add(
                 platoSeleccionado.id_plato,
                 platoSeleccionado.nombre,
@@ -94,16 +97,88 @@ namespace SistemaRestaurante.UI.Formularios
                 total += Convert.ToDecimal(row.Cells["Subtotal"].Value);
             }
             txtTotal.Text = total.ToString("0.00");
+            //columanasDgv();
         }
 
-        private void btnGuardarPedido_Click(object sender, EventArgs e) 
+        private void btnGuardarPedido_Click(object sender, EventArgs e)
         {
+            try
+            {
+                // Validaciones que haya algun dato en el datagridview
+                if (dgvDetallePedido.Rows.Count == 0)
+                {
+                    MessageBox.Show("Agregue al menos un plato al pedido.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
 
+                // Construir lista de detalles desde el DataGridView
+                var detalles = new List<Detalle_Pedido>();
+                foreach (DataGridViewRow row in dgvDetallePedido.Rows)
+                {
+                    if (row.IsNewRow) continue;
+
+                    detalles.Add(new Detalle_Pedido
+                    {
+                        id_plato = Convert.ToInt32(row.Cells["IdPlato"].Value),
+                        cantidad = Convert.ToInt32(row.Cells["Cantidad"].Value),
+                        num_mesa = Convert.ToInt32(row.Cells["NumMesa"].Value),
+                        subtotal = Convert.ToDecimal(row.Cells["Subtotal"].Value)
+                    });
+                }
+
+                // Construir objeto Pedido
+                var pedido = new Pedido
+                {
+                    fecha_pedido = DateTime.Now,
+                    estado = Estado.PENDIENTE,
+                    id_usuario = 1 // TODO: reemplazar por id real del usuario autenticado
+                };
+
+                // El BLL ahora devuelve el num_orden generado
+                string numOrden = _registroBLL.RegistrarPedido(pedido, detalles);
+
+                MessageBox.Show($"Pedido registrado correctamente. N° orden: {numOrden}", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // Mostrar el num_orden en el TextBox si existe
+                try
+                {
+                    if (this.Controls.ContainsKey("txtNumOrden"))
+                        ((TextBox)this.Controls["txtNumOrden"]).Text = numOrden;
+                }
+                catch { }
+
+                // Limpiar formulario
+                dgvDetallePedido.Rows.Clear();
+                txtTotal.Text = "0.00";
+                txtMesa.Text = string.Empty;
+                nudCantidad.Value = 1;
+                if (cbxPlato.Items.Count > 0) cbxPlato.SelectedIndex = 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al registrar el pedido: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
         private void btnQuitarPlato_Click(object sender, EventArgs e) 
         {
-        
+            if (dgvDetallePedido.SelectedRows.Count > 0)
+            {
+                dgvDetallePedido.Rows.RemoveAt(dgvDetallePedido.SelectedRows[0].Index);
+
+                // Actualizar el total después de quitar la fila
+                decimal total = 0;
+                foreach (DataGridViewRow row in dgvDetallePedido.Rows)
+                {
+                    total += Convert.ToDecimal(row.Cells["Subtotal"].Value);
+                }
+                txtTotal.Text = total.ToString("0.00");
+            }
+            else
+            {
+                MessageBox.Show("Seleccione una fila para quitar.");
+            }
         }
+ 
         private void dgvDetallePedido_SelectionChanged(object sender, EventArgs e) 
         {
         

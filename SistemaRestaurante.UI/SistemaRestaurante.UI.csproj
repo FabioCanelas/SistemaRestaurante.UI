@@ -126,6 +126,12 @@
     <Compile Include="Formularios\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Formularios\LoginUI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Formularios\LoginUI.Designer.cs">
+      <DependentUpon>LoginUI.cs</DependentUpon>
+    </Compile>
     <Compile Include="Formularios\PlatosUI.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -155,6 +161,9 @@
     <EmbeddedResource Include="Formularios\DashboardAdmiUI.resx">
       <DependentUpon>DashboardAdmiUI.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Formularios\LoginUI.resx">
+      <DependentUpon>LoginUI.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Formularios\PlatosUI.resx">
       <DependentUpon>PlatosUI.cs</DependentUpon>
     </EmbeddedResource>
@@ -169,13 +178,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <None Include="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -184,6 +189,11 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
@@ -211,9 +221,12 @@
     <Content Include="Recursos\Logo.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Recursos\LogoConFondo.png" />
+    <Content Include="Recursos\LogoFondo.png" />
     <Content Include="Recursos\Logoo.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Recursos\LogoPeque.png" />
     <Content Include="ScriptsSQL\DDL.sql" />
     <Content Include="ScriptsSQL\DML.sql" />
   </ItemGroup>

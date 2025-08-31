@@ -30,10 +30,23 @@ namespace SistemaRestaurante.UI.Formularios
             dgvPlatos.DataSource = null;
             dgvPlatos.DataSource = platos;
             LimpiarCampos();
+
+            // Cambiar los nombres de los encabezados de columna
+            dgvPlatos.Columns["id_plato"].HeaderText = "ID";
+            dgvPlatos.Columns["nombre"].HeaderText = "Nombre del Plato";
+            dgvPlatos.Columns["descripcion"].HeaderText = "Descripción";
+            dgvPlatos.Columns["precio"].HeaderText = "Precio (Bs)";
         }
 
         private void tamanioDgv()
         {
+            // Nombre de las columnas
+            dgvPlatos.Columns.Add("id_plato", "ID Plato");
+            dgvPlatos.Columns.Add("nombre", "Nombre Plato");
+            dgvPlatos.Columns.Add("descripcion", "Descripción");
+            dgvPlatos.Columns.Add("precio", "Precio");
+            
+           
             // dataDridView
             // Configurar las columnas (opcional)
             dgvPlatos.Columns["id_plato"].Width = 40;
@@ -66,6 +79,7 @@ namespace SistemaRestaurante.UI.Formularios
             {
                 MessageBox.Show(ex.Message);
             }
+            tamanioDgv();
         }
 
         private void LimpiarCampos()
@@ -74,6 +88,7 @@ namespace SistemaRestaurante.UI.Formularios
             txtNombre.Text = "";
             txtDescripcion.Text = "";
             nudPrecio.Text = "0.0";
+            tamanioDgv();
         }
 
         private void btnEliminar_Click(object sender, EventArgs e)
@@ -94,7 +109,7 @@ namespace SistemaRestaurante.UI.Formularios
             {
                 MessageBox.Show(ex.Message);
             }
-            CargarPlatos();
+            tamanioDgv();
         }
 
         private void btnEditar_Click(object sender, EventArgs e)
@@ -122,6 +137,7 @@ namespace SistemaRestaurante.UI.Formularios
             {
                 MessageBox.Show(ex.Message);
             }
+            tamanioDgv();
         }
 
         private void btnLimpiar_Click(object sender, EventArgs e)
