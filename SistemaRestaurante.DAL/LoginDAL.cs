@@ -42,12 +42,38 @@ namespace SistemaRestaurante.DAL
                         password = rdr.IsDBNull(rdr.GetOrdinal("password")) ? null : rdr.GetString("password"),
                     };
 
-                    // Mapear rol (asumiendo que en BD está almacenado como INT)
+                    // Mapear rol: soportar ENUM/text o entero
                     if (!rdr.IsDBNull(rdr.GetOrdinal("rol")))
                     {
                         try
                         {
-                            user.rol = (Rol)rdr.GetInt32("rol");
+                            var rolObj = rdr["rol"];
+                            if (rolObj is string)
+                            {
+                                var rolStr = (rolObj as string).Trim();
+                                if (Enum.TryParse<Rol>(rolStr, true, out var rolEnum))
+                                {
+                                    user.rol = rolEnum;
+                                }
+                                else if (int.TryParse(rolStr, out var rolInt))
+                                {
+                                    user.rol = (Rol)rolInt;
+                                }
+                                else
+                                {
+                                    user.rol = Rol.Seleccionar;
+                                }
+                            }
+                            else if (rolObj is int || rolObj is long)
+                            {
+                                user.rol = (Rol)Convert.ToInt32(rolObj);
+                            }
+                            else
+                            {
+                                // Fallback a cadena
+                                var s = rolObj.ToString();
+                                if (Enum.TryParse<Rol>(s, true, out var r2)) user.rol = r2; else user.rol = Rol.Seleccionar;
+                            }
                         }
                         catch
                         {

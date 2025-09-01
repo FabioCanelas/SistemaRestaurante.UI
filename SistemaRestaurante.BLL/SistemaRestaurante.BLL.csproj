@@ -97,10 +97,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="DetallesPedidoBLL.cs" />
     <Compile Include="LoginBLL.cs" />
     <Compile Include="PlatoBLL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegistroPedidoBLL.cs" />
+    <Compile Include="ReportesBLL.cs" />
     <Compile Include="UsuarioBLL.cs" />
   </ItemGroup>
   <ItemGroup>

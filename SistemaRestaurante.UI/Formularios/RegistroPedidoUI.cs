@@ -20,12 +20,15 @@ namespace SistemaRestaurante.UI.Formularios
         public RegistroPedidoUI()
         {
             InitializeComponent();
-            //btnReporteCliente.Click += BtnReporteCliente_Click;
-            //btnReporteCocina.Click += BtnReporteCocina_Click;
+            // Registrar handlers en el constructor para evitar duplicados en el diseñador
+            if (btnReporteCliente != null) btnReporteCliente.Click += BtnReporteCliente_Click;
+            if (btnReporteCocina != null) btnReporteCocina.Click += BtnReporteCocina_Click;
+            // registrar también los botones alternativos (btnRepCliente/btnRepCocina)
+            if (btnRepCliente != null) btnRepCliente.Click += BtnReporteCliente_Click;
+            if (btnRepCocina != null) btnRepCocina.Click += BtnReporteCocina_Click;
 
             columanasDgv();
             cargarPlatos();
-            
         }
         private void cargarPlatos()
         {
@@ -59,16 +62,61 @@ namespace SistemaRestaurante.UI.Formularios
         }
         private void BtnReporteCliente_Click(object sender, EventArgs e)
         {
-            // Lógica para mostrar el reporte de detalle de venta para el cliente
-            // Ejemplo: Mostrar un MessageBox o abrir un formulario de reporte
-            MessageBox.Show("Mostrar reporte de venta para el cliente.");
+            // Construir y mostrar preview del ticket para cliente usando el contenido de dgvDetallePedido
+            var sb = new StringBuilder();
+            sb.AppendLine("*** TICKET CLIENTE ***");
+            sb.AppendLine("Restaurante El Festín");
+            sb.AppendLine($"Fecha: {DateTime.Now:g}");
+            sb.AppendLine(new string('-', 40));
+            sb.AppendLine(string.Format("{0,-30}{1,6}{2,12}", "Plato", "Cant", "Subtotal"));
+
+            decimal total = 0m;
+            foreach (DataGridViewRow row in dgvDetallePedido.Rows)
+            {
+                if (row.IsNewRow) continue;
+                var nombre = row.Cells["NombrePlato"].Value?.ToString() ?? string.Empty;
+                var cant = Convert.ToInt32(row.Cells["Cantidad"].Value);
+                var sub = Convert.ToDecimal(row.Cells["Subtotal"].Value);
+                sb.AppendLine(string.Format("{0,-30}{1,6}{2,12}", Truncate(nombre, 30), cant, sub.ToString("0.00")));
+                total += sub;
+            }
+            sb.AppendLine(new string('-', 40));
+            sb.AppendLine(string.Format("{0,38}", "TOTAL: " + total.ToString("0.00")));
+            sb.AppendLine("-------------------------------");
+            sb.AppendLine("Gracias por su compra");
+
+            MessageBox.Show(sb.ToString(), "Preview - Ticket Cliente", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void BtnReporteCocina_Click(object sender, EventArgs e)
         {
-            // Lógica para mostrar el reporte de detalle de venta para cocina
-            // Ejemplo: Mostrar un MessageBox o abrir un formulario de reporte
-            MessageBox.Show("Mostrar reporte de venta para cocina.");
+            // Construir y mostrar preview del ticket para cocina (simplificado)
+            var sb = new StringBuilder();
+            sb.AppendLine("*** TICKET COCINA ***");
+            sb.AppendLine($"Fecha: {DateTime.Now:g}");
+            sb.AppendLine(new string('-', 30));
+
+            int mesa = -1;
+            foreach (DataGridViewRow row in dgvDetallePedido.Rows)
+            {
+                if (row.IsNewRow) continue;
+                var nombre = row.Cells["NombrePlato"].Value?.ToString() ?? string.Empty;
+                var cant = Convert.ToInt32(row.Cells["Cantidad"].Value);
+                if (int.TryParse(row.Cells["NumMesa"].Value?.ToString(), out int m)) mesa = m;
+                sb.AppendLine($"{cant} x {Truncate(nombre, 30)}");
+            }
+
+            sb.AppendLine(new string('-', 30));
+            sb.AppendLine($"Mesa: {(mesa>0? mesa.ToString(): "-")}");
+            sb.AppendLine("-------------------------------");
+
+            MessageBox.Show(sb.ToString(), "Preview - Ticket Cocina", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private string Truncate(string value, int maxLength)
+        {
+            if (string.IsNullOrEmpty(value)) return value;
+            return value.Length <= maxLength ? value : value.Substring(0, maxLength - 3) + "...";
         }
 
         private void btnAgregarPlato_Click(object sender, EventArgs e)
@@ -76,7 +124,14 @@ namespace SistemaRestaurante.UI.Formularios
             // 1. Obtener datos del formulario
             var platoSeleccionado = (Plato)cbxPlato.SelectedItem; // Asegúrate de tener el objeto Plato en el ComboBox
             int cantidad = (int)nudCantidad.Value;
-            int numMesa = int.Parse(txtMesa.Text);
+
+            // Validar número de mesa antes de parsear
+            if (string.IsNullOrWhiteSpace(txtMesa.Text) || !int.TryParse(txtMesa.Text.Trim(), out int numMesa))
+            {
+                MessageBox.Show("Ingrese un número de mesa válido.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtMesa.Focus();
+                return;
+            }
 
             // 2. Calcular subtotal
             decimal subtotal = cantidad * platoSeleccionado.precio;
@@ -179,17 +234,26 @@ namespace SistemaRestaurante.UI.Formularios
             }
         }
  
-        private void dgvDetallePedido_SelectionChanged(object sender, EventArgs e) 
+        private void dgvDetallePedido_SelectionChanged(object sender, EventArgs e)
         {
         
         }
-        private void btnReporteCliente_Click(object sender, EventArgs e) 
+
+        // Métodos que el diseñador espera - reenvían a los handlers principales
+        private void btnReporteCliente_Click(object sender, EventArgs e)
         {
-        
+            BtnReporteCliente_Click(sender, e);
         }
-        private void btnReporteCocina_Click(object sender, EventArgs e) 
-        { 
-        
+
+        private void btnReporteCocina_Click(object sender, EventArgs e)
+        {
+            BtnReporteCocina_Click(sender, e);
+        }
+
+        private void btnRepCliente_Click(object sender, EventArgs e)
+        {
+            // Si este botón debe hacer lo mismo que reporte cliente
+            BtnReporteCliente_Click(sender, e);
         }
     }
 }

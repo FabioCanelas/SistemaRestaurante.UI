@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btnRepCliente = new System.Windows.Forms.Button();
+            this.btnRepCocina = new System.Windows.Forms.Button();
             this.btnGuardarPedido = new System.Windows.Forms.Button();
             this.btnQuitarPlato = new System.Windows.Forms.Button();
             this.txtTotal = new System.Windows.Forms.TextBox();
@@ -56,6 +58,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.btnRepCliente);
+            this.groupBox1.Controls.Add(this.btnRepCocina);
             this.groupBox1.Controls.Add(this.btnGuardarPedido);
             this.groupBox1.Controls.Add(this.btnQuitarPlato);
             this.groupBox1.Controls.Add(this.txtTotal);
@@ -71,9 +75,30 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Registrar Pedidos";
             // 
+            // btnRepCliente
+            // 
+            this.btnRepCliente.Location = new System.Drawing.Point(79, 415);
+            this.btnRepCliente.Margin = new System.Windows.Forms.Padding(2);
+            this.btnRepCliente.Name = "btnRepCliente";
+            this.btnRepCliente.Size = new System.Drawing.Size(100, 27);
+            this.btnRepCliente.TabIndex = 29;
+            this.btnRepCliente.Text = "Reporte Cliente";
+            this.btnRepCliente.UseVisualStyleBackColor = true;
+            this.btnRepCliente.Click += new System.EventHandler(this.btnRepCliente_Click);
+            // 
+            // btnRepCocina
+            // 
+            this.btnRepCocina.Location = new System.Drawing.Point(183, 415);
+            this.btnRepCocina.Margin = new System.Windows.Forms.Padding(2);
+            this.btnRepCocina.Name = "btnRepCocina";
+            this.btnRepCocina.Size = new System.Drawing.Size(100, 27);
+            this.btnRepCocina.TabIndex = 28;
+            this.btnRepCocina.Text = "Reporte Cocina";
+            this.btnRepCocina.UseVisualStyleBackColor = true;
+            // 
             // btnGuardarPedido
             // 
-            this.btnGuardarPedido.Location = new System.Drawing.Point(457, 404);
+            this.btnGuardarPedido.Location = new System.Drawing.Point(457, 415);
             this.btnGuardarPedido.Margin = new System.Windows.Forms.Padding(2);
             this.btnGuardarPedido.Name = "btnGuardarPedido";
             this.btnGuardarPedido.Size = new System.Drawing.Size(100, 27);
@@ -255,10 +280,10 @@
             // 
             // btnAgregarPlato
             // 
-            this.btnAgregarPlato.Location = new System.Drawing.Point(435, 67);
+            this.btnAgregarPlato.Location = new System.Drawing.Point(418, 67);
             this.btnAgregarPlato.Margin = new System.Windows.Forms.Padding(2);
             this.btnAgregarPlato.Name = "btnAgregarPlato";
-            this.btnAgregarPlato.Size = new System.Drawing.Size(75, 25);
+            this.btnAgregarPlato.Size = new System.Drawing.Size(100, 25);
             this.btnAgregarPlato.TabIndex = 10;
             this.btnAgregarPlato.Text = "Agregar Plato";
             this.btnAgregarPlato.UseVisualStyleBackColor = true;
@@ -325,5 +350,7 @@
         private System.Windows.Forms.Button btnAgregarPlato;
         private System.Windows.Forms.Button btnReporteCliente;
         private System.Windows.Forms.Button btnReporteCocina;
+        private System.Windows.Forms.Button btnRepCliente;
+        private System.Windows.Forms.Button btnRepCocina;
     }
 }

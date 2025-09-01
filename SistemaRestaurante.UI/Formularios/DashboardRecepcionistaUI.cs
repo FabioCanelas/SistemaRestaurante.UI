@@ -1,4 +1,4 @@
-﻿    using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -11,12 +11,13 @@ using SistemaRestaurante.ENT;
 
 namespace SistemaRestaurante.UI.Formularios
 {
-    public partial class DashboardAdmiUI : Form
+    // Clase corregida para el dashboard de recepcionista
+    public partial class DashboardRecepcionistaUI : Form
     {
         // Propiedad para recibir el usuario autenticado desde el login
         public Usuario UsuarioActual { get; set; }
 
-        public DashboardAdmiUI()
+        public DashboardRecepcionistaUI()
         {
             InitializeComponent();
             this.ClientSize = new Size(1000, 500);
@@ -30,7 +31,7 @@ namespace SistemaRestaurante.UI.Formularios
             // PANEL
             if (panelMenu != null) panelMenu.BackColor = Color.FromArgb(107, 46, 40);
 
-            // Colorear los botones dentro del panel para evitar dependencias por nombre
+            // Colorear los botones dentro del panel para evitar referencias por nombre
             if (panelMenu != null)
             {
                 foreach (Control c in panelMenu.Controls)
@@ -43,6 +44,7 @@ namespace SistemaRestaurante.UI.Formularios
                 }
             }
         }
+
         private void CargarImagenes()
         {
             try
@@ -71,15 +73,6 @@ namespace SistemaRestaurante.UI.Formularios
             formHijo.Dock = DockStyle.Fill;
             panelContenido.Controls.Add(formHijo);
             formHijo.Show();
-        }
-
-        private void DashboardAdmiUI_Load(object sender, EventArgs e)
-        {
-            // ejemplo: usar UsuarioActual para mostrar nombre
-            if (UsuarioActual != null)
-            {
-                this.Text = $"Dashboard - {UsuarioActual.nombre}";
-            }
         }
 
         private void btnReporteVentas_Click(object sender, EventArgs e)
@@ -111,6 +104,14 @@ namespace SistemaRestaurante.UI.Formularios
             MostrarEnPanel(new RegistroPedidoUI());
         }
 
+        private void DashboardRecepcionistaUI_Load(object sender, EventArgs e)
+        {
+            if (UsuarioActual != null)
+            {
+                this.Text = $"Dashboard - {UsuarioActual.nombre}";
+            }
+        }
+
         private void button3_Click(object sender, EventArgs e)
         {
             MostrarEnPanel(new RegistroPedidoUI());
@@ -120,7 +121,7 @@ namespace SistemaRestaurante.UI.Formularios
         {
             //UsuarioUI usuarioUI = new UsuarioUI();
             //usuarioUI.ShowDialog();
-            MostrarEnPanel(new UsuarioUI());
+            MostrarEnPanel(new RegistroPedidoUI());
         }
 
         private void btnRegisPlato_Click(object sender, EventArgs e)
@@ -138,11 +139,6 @@ namespace SistemaRestaurante.UI.Formularios
         private void imgLogo_Click_1(object sender, EventArgs e)
         {
             panelContenido.Controls.Clear();
-        }
-
-        private void btnReportes_Click(object sender, EventArgs e)
-        {
-            MostrarEnPanel(new ReportesUI());
         }
 
         private void button1_Click(object sender, EventArgs e)

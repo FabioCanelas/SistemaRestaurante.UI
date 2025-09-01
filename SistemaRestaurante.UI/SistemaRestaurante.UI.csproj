@@ -114,6 +114,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Formularios\DashboardRecepcionistaUI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Formularios\DashboardRecepcionistaUI.Designer.cs">
+      <DependentUpon>DashboardRecepcionistaUI.cs</DependentUpon>
+    </Compile>
     <Compile Include="Formularios\DashboardAdmiUI.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -150,6 +156,12 @@
     <Compile Include="Formularios\RegistroPedidoUI.Designer.cs">
       <DependentUpon>RegistroPedidoUI.cs</DependentUpon>
     </Compile>
+    <Compile Include="Formularios\ReportesUI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Formularios\ReportesUI.Designer.cs">
+      <DependentUpon>ReportesUI.cs</DependentUpon>
+    </Compile>
     <Compile Include="Formularios\UsuarioUI.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -158,6 +170,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Formularios\DashboardRecepcionistaUI.resx">
+      <DependentUpon>DashboardRecepcionistaUI.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Formularios\DashboardAdmiUI.resx">
       <DependentUpon>DashboardAdmiUI.cs</DependentUpon>
     </EmbeddedResource>
@@ -172,6 +187,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Formularios\RegistroPedidoUI.resx">
       <DependentUpon>RegistroPedidoUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Formularios\ReportesUI.resx">
+      <DependentUpon>ReportesUI.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Formularios\UsuarioUI.resx">
       <DependentUpon>UsuarioUI.cs</DependentUpon>

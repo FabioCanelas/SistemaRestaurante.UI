@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="DetallePedidoCompleto.cs" />
     <Compile Include="Detalle_Pedido.cs" />
     <Compile Include="Pedido.cs" />
     <Compile Include="Plato.cs" />

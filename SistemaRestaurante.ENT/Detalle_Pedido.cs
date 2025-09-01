@@ -15,4 +15,18 @@ namespace SistemaRestaurante.ENT
         public int id_pedido { get; set; }
         public int id_plato { get; set; }
     }
+    public class DetallePedidoResult
+    {
+        public List<Detalle_Pedido> Pedidos { get; set; }
+        public decimal TotalGeneral { get; set; }
+    }
+    public class Detalle_PedidoAux
+    {
+        public int id_pedido { get; set; }
+        public DateTime fecha_pedido { get; set; }
+        // public string estado { get; set; } opsional a mostrarse o no
+        public decimal total { get; set; }
+        // public int id_usuario { get; set; } opsional a mostrarse o no
+
+    }
 }

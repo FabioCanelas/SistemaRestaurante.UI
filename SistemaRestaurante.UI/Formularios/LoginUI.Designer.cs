@@ -7,7 +7,7 @@ namespace SistemaRestaurante.UI.Formularios
     {
         private System.ComponentModel.IContainer components = null;
 
-        // Controles del formulario (solo diseño)
+        // Controles necesarios para el diseño del login (solo visual, sin lógica)
         private Panel panelLeft;
         private Label lblLogo;
         private Panel panelRight;
@@ -15,15 +15,13 @@ namespace SistemaRestaurante.UI.Formularios
         private Label lblTitle;
         private TextBox txtUsuario;
         private TextBox txtPassword;
+        private Label lblRol;
+        private ComboBox cbxRol;
         private CheckBox chkShow;
         private Button btnLogin;
         private Button btnCancel;
         private Label lblError;
 
-        /// <summary>
-        /// Limpia los recursos que se estén usando.
-        /// </summary>
-        /// <param name="disposing">true si los recursos administrados se deben eliminar; false en caso contrario.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -43,6 +41,8 @@ namespace SistemaRestaurante.UI.Formularios
             this.lblTitle = new System.Windows.Forms.Label();
             this.txtUsuario = new System.Windows.Forms.TextBox();
             this.txtPassword = new System.Windows.Forms.TextBox();
+            this.lblRol = new System.Windows.Forms.Label();
+            this.cbxRol = new System.Windows.Forms.ComboBox();
             this.chkShow = new System.Windows.Forms.CheckBox();
             this.btnLogin = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
@@ -65,17 +65,16 @@ namespace SistemaRestaurante.UI.Formularios
             // 
             // lblLogo
             // 
-            this.lblLogo.BackColor = System.Drawing.Color.DimGray;
+            this.lblLogo.BackColor = System.Drawing.Color.Silver;
             this.lblLogo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblLogo.Font = new System.Drawing.Font("Segoe UI Semibold", 14F, System.Drawing.FontStyle.Bold);
             this.lblLogo.ForeColor = System.Drawing.Color.White;
-            this.lblLogo.Image = global::SistemaRestaurante.UI.Properties.Resources.LogoFondo;
+            this.lblLogo.Image = global::SistemaRestaurante.UI.Properties.Resources.LogoConFondo1;
             this.lblLogo.Location = new System.Drawing.Point(0, 0);
             this.lblLogo.Name = "lblLogo";
             this.lblLogo.Size = new System.Drawing.Size(300, 420);
             this.lblLogo.TabIndex = 0;
             this.lblLogo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblLogo.Click += new System.EventHandler(this.lblLogo_Click);
             // 
             // panelRight
             // 
@@ -86,6 +85,8 @@ namespace SistemaRestaurante.UI.Formularios
             this.panelRight.Controls.Add(this.lblTitle);
             this.panelRight.Controls.Add(this.txtUsuario);
             this.panelRight.Controls.Add(this.txtPassword);
+            this.panelRight.Controls.Add(this.lblRol);
+            this.panelRight.Controls.Add(this.cbxRol);
             this.panelRight.Controls.Add(this.chkShow);
             this.panelRight.Controls.Add(this.btnLogin);
             this.panelRight.Controls.Add(this.btnCancel);
@@ -100,7 +101,7 @@ namespace SistemaRestaurante.UI.Formularios
             this.lblTitle.AutoSize = true;
             this.lblTitle.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold);
             this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
-            this.lblTitle.Location = new System.Drawing.Point(49, 67);
+            this.lblTitle.Location = new System.Drawing.Point(40, 40);
             this.lblTitle.Name = "lblTitle";
             this.lblTitle.Size = new System.Drawing.Size(165, 32);
             this.lblTitle.TabIndex = 0;
@@ -110,7 +111,7 @@ namespace SistemaRestaurante.UI.Formularios
             // 
             this.txtUsuario.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtUsuario.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.txtUsuario.Location = new System.Drawing.Point(49, 127);
+            this.txtUsuario.Location = new System.Drawing.Point(40, 100);
             this.txtUsuario.Name = "txtUsuario";
             this.txtUsuario.Size = new System.Drawing.Size(360, 25);
             this.txtUsuario.TabIndex = 1;
@@ -119,35 +120,55 @@ namespace SistemaRestaurante.UI.Formularios
             // 
             this.txtPassword.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtPassword.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.txtPassword.Location = new System.Drawing.Point(49, 177);
+            this.txtPassword.Location = new System.Drawing.Point(40, 150);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.Size = new System.Drawing.Size(360, 25);
             this.txtPassword.TabIndex = 2;
             this.txtPassword.UseSystemPasswordChar = true;
             // 
+            // lblRol
+            // 
+            this.lblRol.AutoSize = true;
+            this.lblRol.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblRol.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
+            this.lblRol.Location = new System.Drawing.Point(111, 207);
+            this.lblRol.Name = "lblRol";
+            this.lblRol.Size = new System.Drawing.Size(27, 15);
+            this.lblRol.TabIndex = 3;
+            this.lblRol.Text = "Rol:";
+            // 
+            // cbxRol
+            // 
+            this.cbxRol.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbxRol.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.cbxRol.Location = new System.Drawing.Point(156, 203);
+            this.cbxRol.Name = "cbxRol";
+            this.cbxRol.Size = new System.Drawing.Size(160, 23);
+            this.cbxRol.TabIndex = 4;
+            // 
             // chkShow
             // 
             this.chkShow.AutoSize = true;
             this.chkShow.ForeColor = System.Drawing.Color.Gray;
-            this.chkShow.Location = new System.Drawing.Point(49, 212);
+            this.chkShow.Location = new System.Drawing.Point(40, 181);
             this.chkShow.Name = "chkShow";
             this.chkShow.Size = new System.Drawing.Size(61, 17);
-            this.chkShow.TabIndex = 3;
+            this.chkShow.TabIndex = 5;
             this.chkShow.Text = "Mostrar";
             // 
             // btnLogin
             // 
-            this.btnLogin.BackColor = System.Drawing.Color.Gray;
+            this.btnLogin.BackColor = System.Drawing.Color.Silver;
             this.btnLogin.FlatAppearance.BorderSize = 0;
             this.btnLogin.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLogin.ForeColor = System.Drawing.Color.White;
-            this.btnLogin.Location = new System.Drawing.Point(49, 257);
+            this.btnLogin.Location = new System.Drawing.Point(40, 240);
             this.btnLogin.Name = "btnLogin";
             this.btnLogin.Size = new System.Drawing.Size(360, 40);
-            this.btnLogin.TabIndex = 4;
+            this.btnLogin.TabIndex = 6;
             this.btnLogin.Text = "Entrar";
             this.btnLogin.UseVisualStyleBackColor = false;
-            this.btnLogin.Click += new System.EventHandler(this.btnLogin_Click);
+            this.btnLogin.Click += new System.EventHandler(this.btnLogin_Click_1);
             // 
             // btnCancel
             // 
@@ -155,22 +176,21 @@ namespace SistemaRestaurante.UI.Formularios
             this.btnCancel.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
             this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCancel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
-            this.btnCancel.Location = new System.Drawing.Point(49, 307);
+            this.btnCancel.Location = new System.Drawing.Point(40, 295);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(360, 36);
-            this.btnCancel.TabIndex = 5;
+            this.btnCancel.TabIndex = 7;
             this.btnCancel.Text = "Salir";
             this.btnCancel.UseVisualStyleBackColor = false;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // lblError
             // 
             this.lblError.AutoSize = true;
             this.lblError.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(53)))), ((int)(((byte)(69)))));
-            this.lblError.Location = new System.Drawing.Point(49, 357);
+            this.lblError.Location = new System.Drawing.Point(40, 345);
             this.lblError.Name = "lblError";
             this.lblError.Size = new System.Drawing.Size(0, 13);
-            this.lblError.TabIndex = 6;
+            this.lblError.TabIndex = 8;
             this.lblError.Visible = false;
             // 
             // btnClose
