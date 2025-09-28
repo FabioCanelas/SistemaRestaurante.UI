@@ -8,8 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using SistemaRestaurante.DAL;
-using MySqlConnector;
-
+using System.Data.SQLite;
 
 namespace SistemaRestaurante.UI.Formularios
 {
@@ -37,7 +36,7 @@ namespace SistemaRestaurante.UI.Formularios
                 {
                     cn.Open(); // Si no lanza excepción, la conexión es válida
                 }
-                lblResultado.Text = "Conexión exitosa";
+                lblResultado.Text = "Conexión SQLite exitosa";
                 lblResultado.ForeColor = System.Drawing.Color.ForestGreen;
             }
             catch (Exception ex)

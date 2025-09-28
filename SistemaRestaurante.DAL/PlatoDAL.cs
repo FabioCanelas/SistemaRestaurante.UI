@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MySqlConnector;
+using System.Data.SQLite;
 using SistemaRestaurante.ENT;
-
 
 namespace SistemaRestaurante.DAL
 {
@@ -26,23 +25,23 @@ namespace SistemaRestaurante.DAL
                 {
                     conexion.Open();
                     string query = "SELECT id_plato,nombre,descripcion,precio FROM plato";
-                    using (var cmd = new MySqlCommand(query, conexion))
+                    using (var cmd = new SQLiteCommand(query, conexion))
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
                         {
                             lista.Add(new Plato
                             {
-                                id_plato = reader.GetInt32("id_plato"),
-                                nombre = reader.GetString("nombre"),
-                                descripcion = reader.GetString("descripcion"),
-                                precio = reader.GetDecimal("precio")
+                                id_plato = Convert.ToInt32(reader["id_plato"]),
+                                nombre = Convert.ToString(reader["nombre"]),
+                                descripcion = Convert.ToString(reader["descripcion"]),
+                                precio = Convert.ToDecimal(reader["precio"])
                             });
                         }
                     }
                 }
             }
-            catch (MySqlException ex)
+            catch (SQLiteException ex)
             {
                 throw new Exception("Error en la base de datos al obtener los Platos: " + ex.Message, ex);
             }
@@ -61,7 +60,7 @@ namespace SistemaRestaurante.DAL
                 {
                     conexion.Open();
                     string query = "INSERT INTO plato (nombre, descripcion, precio) VALUES (@nombre, @descripcion, @precio)";
-                    using (var cmd = new MySqlCommand(query, conexion))
+                    using (var cmd = new SQLiteCommand(query, conexion))
                     {
                         cmd.Parameters.AddWithValue("@nombre", plato.nombre);
                         cmd.Parameters.AddWithValue("@descripcion", plato.descripcion);
@@ -70,7 +69,7 @@ namespace SistemaRestaurante.DAL
                     }
                 }
             }
-            catch (MySqlException ex)
+            catch (SQLiteException ex)
             {
                 throw new Exception("Error en la base de datos al agregar el Plato: " + ex.Message, ex);
             }
@@ -88,14 +87,14 @@ namespace SistemaRestaurante.DAL
                 {
                     conexion.Open();
                     string query = "DELETE FROM plato WHERE id_plato = @id_plato";
-                    using (var cmd = new MySqlCommand(query, conexion))
+                    using (var cmd = new SQLiteCommand(query, conexion))
                     {
                         cmd.Parameters.AddWithValue("@id_plato", id_plato);
                         cmd.ExecuteNonQuery();
                     }
                 }
             }
-            catch (MySqlException ex)
+            catch (SQLiteException ex)
             {
                 throw new Exception("Error en la base de datos al eliminar el Plato: " + ex.Message, ex);
             }
@@ -113,7 +112,7 @@ namespace SistemaRestaurante.DAL
                 {
                     conexion.Open();
                     string query = "UPDATE plato SET nombre = @nombre, descripcion = @descripcion, precio = @precio WHERE id_plato = @id_plato";
-                    using (var cmd = new MySqlCommand(query, conexion))
+                    using (var cmd = new SQLiteCommand(query, conexion))
                     {
                         cmd.Parameters.AddWithValue("@nombre", plato.nombre);
                         cmd.Parameters.AddWithValue("@descripcion", plato.descripcion);
@@ -123,7 +122,7 @@ namespace SistemaRestaurante.DAL
                     }
                 }
             }
-            catch (MySqlException ex)
+            catch (SQLiteException ex)
             {
                 throw new Exception("Error en la base de datos al actualizar el Plato: " + ex.Message, ex);
             }

@@ -28,7 +28,7 @@ namespace SistemaRestaurante.UI.Formularios
         {
             var platos = platoBLL.ObtenerPlatos();
             dgvPlatos.DataSource = null;
-            // permitir que el grid genere columnas desde el datasource
+           
             dgvPlatos.AutoGenerateColumns = true;
             dgvPlatos.DataSource = platos;
             LimpiarCampos();

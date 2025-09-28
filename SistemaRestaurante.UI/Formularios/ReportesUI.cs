@@ -9,18 +9,25 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using SistemaRestaurante.BLL;
+using SistemaRestaurante.DAL;
 
 namespace SistemaRestaurante.UI.Formularios
 {
     public partial class ReportesUI : Form
     {
         private ReportesBLL detalleBLL = new ReportesBLL();
+        private SupabaseSyncService _syncService;
+        
         public ReportesUI()
         {
             InitializeComponent();
             Cargardetalles();
             dgvDetalles.CellClick += dgvDetalles_SelectionChanged;
+            
+            // Inicializar servicio de sincronización
+            _syncService = new SupabaseSyncService();
         }
+        
         private void dgvDetalles_SelectionChanged(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -79,7 +86,6 @@ namespace SistemaRestaurante.UI.Formularios
                     }
                     catch { }
                 }
-
             }
         }
 
@@ -211,6 +217,102 @@ namespace SistemaRestaurante.UI.Formularios
         private void label2_Click_1(object sender, EventArgs e)
         {
 
+        }
+
+        private void dgvDetalles_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        // Método de sincronización con Supabase
+        private async void button1_Click(object sender, EventArgs e)
+        {
+            var btn = sender as Button;
+            string textoOriginal = btn?.Text ?? "Sincronizar con Supabase";
+            
+            if (btn != null)
+            {
+                btn.Enabled = false;
+                btn.Text = "Sincronizando...";
+                btn.BackColor = Color.Orange;
+            }
+
+            try
+            {
+                // Verificar conexión a internet primero
+                bool tieneInternet = await _syncService.TieneConexionInternet();
+                
+                if (!tieneInternet)
+                {
+                    MessageBox.Show("No hay conexión a internet.\nVerifica tu conexión e intenta nuevamente.", 
+                                  "Sin Conexión", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Realizar sincronización
+                bool resultado = await _syncService.SincronizarDatos();
+                
+                if (resultado)
+                {
+                    MessageBox.Show("¡Sincronización completada exitosamente!\n\n" +
+                                  "Todos los datos locales han sido enviados a Supabase:\n" +
+                                  "• Usuarios\n" +
+                                  "• Platos\n" +
+                                  "• Pedidos\n" +
+                                  "• Detalles de pedidos", 
+                                  "Sincronización Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    
+                    if (btn != null)
+                        btn.BackColor = Color.LightGreen;
+                }
+                else
+                {
+                    MessageBox.Show("La sincronización no se pudo completar.\n\n" +
+                                  "Posibles causas:\n" +
+                                  "• Problemas de conexión con Supabase\n" +
+                                  "• Configuración incorrecta\n" +
+                                  "• Servicio temporalmente no disponible\n\n" +
+                                  "Revisa la ventana de Output (Debug) para más detalles.", 
+                                  "Sincronización Incompleta", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    
+                    if (btn != null)
+                        btn.BackColor = Color.LightCoral;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error durante la sincronización:\n\n{ex.Message}\n\n" +
+                              "Verifica:\n" +
+                              "• Tu conexión a internet\n" +
+                              "• La configuración de Supabase en appsettings.json\n" +
+                              "• Que las tablas existan en Supabase", 
+                              "Error de Sincronización", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                
+                if (btn != null)
+                    btn.BackColor = Color.LightCoral;
+                
+                // Log del error para depuración
+                System.Diagnostics.Debug.WriteLine($"Error detallado de sincronización: {ex}");
+            }
+            finally
+            {
+                if (btn != null)
+                {
+                    btn.Enabled = true;
+                    btn.Text = textoOriginal;
+                    
+                    // Restaurar color original después de 3 segundos
+                    var timer = new Timer();
+                    timer.Interval = 3000;
+                    timer.Tick += (s, args) =>
+                    {
+                        btn.BackColor = Color.FromArgb(243, 228, 210); // Color original del botón
+                        timer.Stop();
+                        timer.Dispose();
+                    };
+                    timer.Start();
+                }
+            }
         }
     }
 }

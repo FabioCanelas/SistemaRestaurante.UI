@@ -1,4 +1,4 @@
-﻿using MySqlConnector;
+﻿using System.Data.SQLite;
 using SistemaRestaurante.ENT;
 using System;
 using System.Collections.Generic;
@@ -14,56 +14,51 @@ namespace SistemaRestaurante.DAL
 
         public ReportesDAL()
         {
-
             _conexion = new ConexionDB();
         }
 
         public List<Detalle_PedidoAux> ObtenerDetallesPedido()
         {
             var lista = new List<Detalle_PedidoAux>();
-            var resultado = new List<DetallePedidoResult>();
-            decimal totalGeneral = 0;
             try
             {
                 using (var conn = _conexion.GetConnection())
                 {
                     conn.Open();
-                    string dtFecha = DateTime.Now.ToString("yyyy/MM/dd");
-                    string query = "SELECT * FROM pedido WHERE fecha_pedido between '" + dtFecha + " 00:00:00' and '" + dtFecha + " 23:59:59'";
-                    using (var consult = new MySqlCommand(query, conn))
-                    using (var reader = consult.ExecuteReader())
+                    string dtFecha = DateTime.Now.ToString("yyyy-MM-dd");
+                    string query = "SELECT * FROM pedido WHERE fecha_pedido between @fecha1 and @fecha2";
+                    using (var consult = new SQLiteCommand(query, conn))
                     {
-                        while (reader.Read())
+                        consult.Parameters.AddWithValue("@fecha1", dtFecha + " 00:00:00");
+                        consult.Parameters.AddWithValue("@fecha2", dtFecha + " 23:59:59");
+                        using (var reader = consult.ExecuteReader())
                         {
-                            var pedido = new Detalle_PedidoAux
+                            while (reader.Read())
                             {
-                                id_pedido = reader.GetInt32("id_pedido"),
-                                fecha_pedido = reader.GetDateTime("fecha_pedido"),
-                                total = reader.GetDecimal("total"),
-                            };
-                            lista.Add(pedido);
-                            totalGeneral += pedido.total;
+                                var pedido = new Detalle_PedidoAux
+                                {
+                                    id_pedido = Convert.ToInt32(reader["id_pedido"]),
+                                    fecha_pedido = Convert.ToDateTime(reader["fecha_pedido"]),
+                                    total = Convert.ToDecimal(reader["total"]),
+                                };
+                                lista.Add(pedido);
+                            }
                         }
                     }
-
                 }
 
-
-                return (lista);
-
+                return lista;
             }
-            catch (MySqlException ex)
+            catch (SQLiteException ex)
             {
-
                 throw new Exception("Error en la base de datos al obtener los productos: " + ex.Message, ex);
             }
             catch (Exception ex)
             {
                 throw new Exception("Error al obtener los productos: ", ex);
             }
-
-
         }
+
         public List<Detalle_PedidoAux> obtenerFechaPedido(DateTime fecha1, DateTime fecha2)
         {
             var lista = new List<Detalle_PedidoAux>();
@@ -72,33 +67,34 @@ namespace SistemaRestaurante.DAL
                 using (var conn = _conexion.GetConnection())
                 {
                     conn.Open();
-                    string dfFecha1 = fecha1.ToString("yyyy/MM/dd");
-                    string dfFecha2 = fecha2.ToString("yyyy/MM/dd");
+                    string dfFecha1 = fecha1.ToString("yyyy-MM-dd");
+                    string dfFecha2 = fecha2.ToString("yyyy-MM-dd");
 
+                    string query = "SELECT * FROM pedido WHERE fecha_pedido between @fecha1 and @fecha2";
 
-                    string query = "SELECT * FROM pedido WHERE fecha_pedido between '" + dfFecha1 + " 00:00:00' and '" + dfFecha2 + " 23:59:59'";
-
-                    using (var consult = new MySqlCommand(query, conn))
-                    using (var reader = consult.ExecuteReader())
+                    using (var consult = new SQLiteCommand(query, conn))
                     {
-                        while (reader.Read())
+                        consult.Parameters.AddWithValue("@fecha1", dfFecha1 + " 00:00:00");
+                        consult.Parameters.AddWithValue("@fecha2", dfFecha2 + " 23:59:59");
+                        using (var reader = consult.ExecuteReader())
                         {
-                            lista.Add(new Detalle_PedidoAux
+                            while (reader.Read())
                             {
-                                id_pedido = reader.GetInt32("id_pedido"),
-                                fecha_pedido = reader.GetDateTime("fecha_pedido"),
-                                total = reader.GetDecimal("total"),
-                            });
+                                lista.Add(new Detalle_PedidoAux
+                                {
+                                    id_pedido = Convert.ToInt32(reader["id_pedido"]),
+                                    fecha_pedido = Convert.ToDateTime(reader["fecha_pedido"]),
+                                    total = Convert.ToDecimal(reader["total"]),
+                                });
+                            }
                         }
                     }
                 }
 
-
                 return lista;
             }
-            catch (MySqlException ex)
+            catch (SQLiteException ex)
             {
-
                 throw new Exception("Error en la base de datos al obtener los productos: " + ex.Message, ex);
             }
             catch (Exception ex)
@@ -106,7 +102,6 @@ namespace SistemaRestaurante.DAL
                 throw new Exception("Error al obtener los productos: " + ex.Message);
             }
         }
-
 
         public List<DetallePedidoCompleto> ObtenerDetalleCompletoPorId(int idPedido)
         {
@@ -116,11 +111,11 @@ namespace SistemaRestaurante.DAL
                 using (var conn = _conexion.GetConnection())
                 {
                     conn.Open();
-                    string query = @"SELECT dp.id_detalle, dp.id_pedido, dp.id_plato, p.nombre AS nombre_plato, dp.cantidad, dp.subtotal, (dp.cantidad * dp.subtotal) AS subtotal
+                    string query = @"SELECT dp.id_detalle, dp.id_pedido, dp.id_plato, p.nombre AS nombre_plato, dp.cantidad, dp.subtotal
                                      FROM detalle_pedido dp
                                      JOIN plato p ON dp.id_plato = p.id_plato
                                      WHERE dp.id_pedido = @idPedido";
-                    using (var consult = new MySqlCommand(query, conn))
+                    using (var consult = new SQLiteCommand(query, conn))
                     {
                         consult.Parameters.AddWithValue("@idPedido", idPedido);
                         using (var reader = consult.ExecuteReader())
@@ -129,19 +124,19 @@ namespace SistemaRestaurante.DAL
                             {
                                 lista.Add(new DetallePedidoCompleto
                                 {
-                                    id_detalle = reader.GetInt32("id_detalle"),
-                                    id_pedido = reader.GetInt32("id_pedido"),
-                                    id_plato = reader.GetInt32("id_plato"),
-                                    nombre_plato = reader.GetString("nombre_plato"),
-                                    cantidad = reader.GetInt32("cantidad"),
-                                    subtotal = reader.GetDecimal("subtotal")
+                                    id_detalle = Convert.ToInt32(reader["id_detalle"]),
+                                    id_pedido = Convert.ToInt32(reader["id_pedido"]),
+                                    id_plato = Convert.ToInt32(reader["id_plato"]),
+                                    nombre_plato = Convert.ToString(reader["nombre_plato"]),
+                                    cantidad = Convert.ToInt32(reader["cantidad"]),
+                                    subtotal = Convert.ToDecimal(reader["subtotal"])
                                 });
                             }
                         }
                     }
                 }
             }
-            catch (MySqlException ex)
+            catch (SQLiteException ex)
             {
                 throw new Exception("Error en la base de datos al obtener los detalles del pedido: " + ex.Message, ex);
             }
@@ -150,8 +145,6 @@ namespace SistemaRestaurante.DAL
                 throw new Exception("Error al obtener los detalles del pedido: " + ex.Message, ex);
             }
             return lista;
-
-
         }
     }
 }

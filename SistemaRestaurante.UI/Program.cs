@@ -1,13 +1,13 @@
-﻿using SistemaRestaurante.UI.Formularios;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using SistemaRestaurante.UI.Formularios;
 
 namespace SistemaRestaurante.UI
 {
-    internal static class Program
+    static class Program
     {
         /// <summary>
         /// Punto de entrada principal para la aplicación.
@@ -17,6 +17,7 @@ namespace SistemaRestaurante.UI
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            
             Application.Run(new LoginUI());
         }
     }

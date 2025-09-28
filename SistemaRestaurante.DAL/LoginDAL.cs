@@ -1,4 +1,4 @@
-﻿using MySqlConnector;
+﻿using System.Data.SQLite;
 using SistemaRestaurante.ENT;
 using System;
 using System.Collections.Generic;
@@ -17,6 +17,27 @@ namespace SistemaRestaurante.DAL
             _conexion = new ConexionDB();
         }
 
+        private Rol ParseRol(string rolString)
+        {
+            if (string.IsNullOrEmpty(rolString)) return Rol.Seleccionar;
+
+            // Intentar primero con el valor directo del enum
+            if (Enum.TryParse<Rol>(rolString, true, out var rol))
+                return rol;
+
+            // Si no funciona, mapear valores comunes
+            switch (rolString.ToUpper())
+            {
+                case "ADMINISTRADOR":
+                case "ADMIN":
+                    return Rol.ADMIN;
+                case "RECEPCIONISTA":
+                    return Rol.RECEPCIONISTA;
+                default:
+                    return Rol.Seleccionar;
+            }
+        }
+
         // Obtiene un usuario por su username (o null si no existe)
         public Usuario ObtenerPorUsername(string username)
         {
@@ -25,68 +46,34 @@ namespace SistemaRestaurante.DAL
                 FROM usuario
                 WHERE username = @username
                 LIMIT 1";
-            using (var conn = _conexion.GetConnection())
-            using (var cmd = new MySqlCommand(query, conn))
+            
+            try
             {
-                cmd.Parameters.AddWithValue("@username", username);
-                conn.Open();
-                using (var rdr = cmd.ExecuteReader())
+                using (var conn = _conexion.GetConnection())
+                using (var cmd = new SQLiteCommand(query, conn))
                 {
-                    if (!rdr.Read()) return null;
-
-                    var user = new Usuario
+                    cmd.Parameters.AddWithValue("@username", username);
+                    conn.Open();
+                    using (var rdr = cmd.ExecuteReader())
                     {
-                        id_usuario = rdr.IsDBNull(rdr.GetOrdinal("id_usuario")) ? 0 : rdr.GetInt32("id_usuario"),
-                        nombre = rdr.IsDBNull(rdr.GetOrdinal("nombre")) ? null : rdr.GetString("nombre"),
-                        username = rdr.IsDBNull(rdr.GetOrdinal("username")) ? null : rdr.GetString("username"),
-                        password = rdr.IsDBNull(rdr.GetOrdinal("password")) ? null : rdr.GetString("password"),
-                    };
+                        if (!rdr.Read()) return null;
 
-                    // Mapear rol: soportar ENUM/text o entero
-                    if (!rdr.IsDBNull(rdr.GetOrdinal("rol")))
-                    {
-                        try
+                        var user = new Usuario
                         {
-                            var rolObj = rdr["rol"];
-                            if (rolObj is string)
-                            {
-                                var rolStr = (rolObj as string).Trim();
-                                if (Enum.TryParse<Rol>(rolStr, true, out var rolEnum))
-                                {
-                                    user.rol = rolEnum;
-                                }
-                                else if (int.TryParse(rolStr, out var rolInt))
-                                {
-                                    user.rol = (Rol)rolInt;
-                                }
-                                else
-                                {
-                                    user.rol = Rol.Seleccionar;
-                                }
-                            }
-                            else if (rolObj is int || rolObj is long)
-                            {
-                                user.rol = (Rol)Convert.ToInt32(rolObj);
-                            }
-                            else
-                            {
-                                // Fallback a cadena
-                                var s = rolObj.ToString();
-                                if (Enum.TryParse<Rol>(s, true, out var r2)) user.rol = r2; else user.rol = Rol.Seleccionar;
-                            }
-                        }
-                        catch
-                        {
-                            user.rol = Rol.Seleccionar;
-                        }
-                    }
-                    else
-                    {
-                        user.rol = Rol.Seleccionar;
-                    }
+                            id_usuario = rdr["id_usuario"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["id_usuario"]),
+                            nombre = rdr["nombre"] == DBNull.Value ? null : Convert.ToString(rdr["nombre"]),
+                            username = rdr["username"] == DBNull.Value ? null : Convert.ToString(rdr["username"]),
+                            password = rdr["password"] == DBNull.Value ? null : Convert.ToString(rdr["password"]),
+                            rol = ParseRol(rdr["rol"] == DBNull.Value ? "" : Convert.ToString(rdr["rol"]))
+                        };
 
-                    return user;
+                        return user;
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al obtener usuario: " + ex.Message, ex);
             }
         }
 
